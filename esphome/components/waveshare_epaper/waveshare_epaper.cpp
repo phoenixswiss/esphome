@@ -2092,7 +2092,7 @@ void WaveshareEPaper7P5InBV3::initialize() {
   // COMMAND VCOM AND DATA INTERVAL SETTING
   this->command(0x50);
   this->data(0x10);
-  this->data(0x07);
+  this->data(0x00);
 
   // COMMAND TCON SETTING
   this->command(0x60);
@@ -2140,7 +2140,7 @@ void WaveshareEPaper7P5InBV3::initialize() {
 
   this->command(0x20);  // VCOM
   for (count = 0; count < 42; count++)
-    this->data(lut_vcom_7_i_n5_v2[count]); 
+    this->data(lut_vcom_7_i_n5_v2[count]);
 
    this->command(0x21);  // LUTBW
   for (count = 0; count < 42; count++)
@@ -2156,13 +2156,13 @@ void WaveshareEPaper7P5InBV3::initialize() {
 
   this->command(0x24);  // LUTBB
   for (count = 0; count < 42; count++)
-    this->data(lut_bb_7_i_n5_v2[count]); 
+    this->data(lut_bb_7_i_n5_v2[count]);
 
   delay(2);
-  this->command(0x13);
+  /*this->command(0x13);
   for (uint32_t i = 0; i < 800 * 480 / 8; i++) {
     this->data(0xFF);
-  }
+  }*/
   
   // COMMAND POWER DRIVER HAT DOWN
   // This command will turn off booster, controller, source driver, gate driver, VCOM, and
