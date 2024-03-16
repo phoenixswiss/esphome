@@ -2081,8 +2081,6 @@ void WaveshareEPaper7P5InBV3::init_display_() {
   this->data(0x2F);
   this->data(0x17);
 
-  // POWER ON
-  this->command(0x04);
 
   delay(100);  // NOLINT
   this->wait_until_idle_();
@@ -2096,7 +2094,7 @@ void WaveshareEPaper7P5InBV3::init_display_() {
   this->data(0x20);
   this->data(0x01);  // gate 480
   this->data(0xE0);
-  // COMMAND ...?
+  // COMMAND DUAL SPI MM_EN, DUSPI_EN
   this->command(0x15);
   this->data(0x00);
   // COMMAND VCOM AND DATA INTERVAL SETTING
@@ -2158,10 +2156,26 @@ void WaveshareEPaper7P5InBV3::init_display_() {
   this->command(0x24);  // LUTBB
   for (count = 0; count < 42; count++)
     this->data(lut_bb_7_i_n5_v2[count]);
+	
+  // COMMAND POWER DRIVER HAT DOWN
+  // This command will turn off booster, controller, source driver, gate driver, VCOM, and
+  // temperature sensor, but register data will be kept until VDD turned OFF or Deep Sleep Mode.
+  // Source/Gate/Border/VCOM will be released to floating.
+  this->command(0x02);
+  
 };
 void HOT WaveshareEPaper7P5InBV3::display() {
-  this->init_display_();
   uint32_t buf_len = this->get_buffer_length_();
+
+  // COMMAND POWER ON
+  ESP_LOGI(TAG, "Power on the display and hat");
+
+  // This command will turn on booster, controller, regulators, and temperature sensor will be
+  // activated for one-time sensing before enabling booster. When all voltages are ready, the
+  // BUSY_N signal will return to high.
+  this->command(0x04);
+  delay(200);  // NOLINT
+  this->wait_until_idle_();
 
   this->command(0x10);
   for (uint32_t i = 0; i < buf_len; i++) {
