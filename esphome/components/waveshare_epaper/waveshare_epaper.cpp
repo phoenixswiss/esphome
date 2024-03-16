@@ -2091,13 +2091,20 @@ void WaveshareEPaper7P5InBV3::initialize() {
 
   // COMMAND VCOM AND DATA INTERVAL SETTING
   this->command(0x50);
-  this->data(0x11);
+  this->data(0x10);
   this->data(0x07);
 
   // COMMAND TCON SETTING
   this->command(0x60);
   this->data(0x22);
-
+  
+  // Resolution setting
+  this->command(0x65);
+  this->data(0x00);
+  this->data(0x00);  // 800*480
+  this->data(0x00);
+  this->data(0x00);
+  
   delay(100);  // NOLINT
   this->wait_until_idle_();
 							   
