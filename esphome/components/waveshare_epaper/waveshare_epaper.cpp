@@ -2182,14 +2182,6 @@ void HOT WaveshareEPaper7P5InBV3::display() {
   delay(200);  // NOLINT
   this->wait_until_idle_();
 
-  // COMMAND DATA START TRANSMISSION NEW DATA
-  //this->command(0x13);
-
-  /* 
-  delay(2);
-  for (uint32_t i = 0; i < buf_len; i++) {
-    this->data(~(this->buffer_[i]));
-  } */
   this->command(0x10);
   delay(2);
   for (uint32_t i = 0; i < buf_len; i++) {
@@ -2197,34 +2189,13 @@ void HOT WaveshareEPaper7P5InBV3::display() {
   }
   delay(2); 
   
+  // COMMAND DATA START TRANSMISSION NEW DATA
   this->command(0x13);
   delay(2);
   for (uint32_t i = 0; i < buf_len; i++) {
-      this->data(this->buffer_[i]);
+      this->data(~this->buffer_[i]);
   }
   delay(2); 
-
-/*   this->command(0x13);
-  delay(2);
-  for (uint32_t i = 0; i < buf_len; i++) {
-      this->data(0x00);
-  }
-  delay(2);  */
-  
-/*   // COMMAND DATA START TRANSMISSION 1 (B/W data)
-  this->command(0x13);
-  delay(2);
-  for (uint32_t i = 0; i < buf_len; i++) {
-      this->data(~(this->buffer_[i]));
-  }
-  delay(2); */
-  
-    // COMMAND DATA START TRANSMISSION 2 (RED data)
-/*   this->command(0x13);
-  delay(2);
-  for (uint32_t i = 0; i < buf_len; i++) {
-    this->data(0xFF);
-  }  */
   
   delay(100);  // NOLINT
 
