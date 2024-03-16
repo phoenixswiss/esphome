@@ -2104,12 +2104,8 @@ void WaveshareEPaper7P5InBV3::init_display_() {
   // COMMAND TCON SETTING
   this->command(0x60);
   this->data(0x22);
-  // Resolution setting
-  this->command(0x65);
-  this->data(0x00);
-  this->data(0x00);  // 800*480
-  this->data(0x00);
-  this->data(0x00);
+  delay(100);  // NOLINT
+  this->wait_until_idle_();
 
   uint8_t lut_vcom_7_i_n5_v2[] = {
       0x0, 0xF, 0xF, 0x0, 0x0, 0x1, 0x0, 0xF, 0x1, 0xF, 0x1, 0x2, 0x0, 0xF, 0xF, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0,
@@ -2182,16 +2178,21 @@ void HOT WaveshareEPaper7P5InBV3::display() {
     this->data(0xFF);
   }
 
-  this->command(0x13);  // Start Transmission
+//  this->command(0x13);  // Start Transmission
   delay(2);
   for (uint32_t i = 0; i < buf_len; i++) {
     this->data(~this->buffer_[i]);
   }
-
-  this->command(0x12);  // Display Refresh
-  delay(100);           // NOLINT
+ // COMMAND DISPLAY REFRESH
+  this->command(0x12);
+  delay(100);  // NOLINT
   this->wait_until_idle_();
-  this->deep_sleep();
+
+  ESP_LOGV(TAG, "Before command(0x02) (>> power off)");
+  this->command(0x02);
+  this->wait_until_idle_();
+  ESP_LOGV(TAG, "After command(0x02) (>> power off)");
+  
 }
 int WaveshareEPaper7P5InBV3::get_width_internal() { return 800; }
 int WaveshareEPaper7P5InBV3::get_height_internal() { return 480; }
