@@ -2056,28 +2056,23 @@ void WaveshareEPaper7P5InBV3::initialize() {
   // COMMAND POWER SETTING
   this->command(0x01);
 
-  this->data(0x07);  // Border LDO disbaled / VSR_EN = internal power / VS_EN = internal power / VG_EN = internal power
-				   
-  this->data(0x17);  // VGH&VGL VGH:+20 VGL:-20V
-  this->data(0x3F);  // VSH 3F=15V
-  this->data(0x3F);  // VSL 0x26  0x3A = -14v (default)   0x3F=-15V
-							
+  // 1-0=11: internal power
+  this->data(0x07);
+  this->data(0x17);  // VGH&VGL
+  this->data(0x3F);  // VSH
+  this->data(0x26);  // VSL
+  this->data(0x11);  // VSHR
 
-					
-					  
-  this->data(0x3F);  // VSHR
-  
-					
-					  
-				   
-				   
-				   
-				   
-
-			 
-					  
-
-						
+  // VCOM DC Setting
+  this->command(0x82);
+  this->data(0x24);  // VCOM
+																  
+  // Booster Setting
+  this->command(0x06);
+  this->data(0x27);
+  this->data(0x27);
+  this->data(0x2F);
+  this->data(0x17);
 						   
   // COMMAND PANEL SETTING
   this->command(0x00);
